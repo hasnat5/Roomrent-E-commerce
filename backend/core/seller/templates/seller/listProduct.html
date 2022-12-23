@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>{{heading}}</h1>
+    <form action="" method="post">
+        {% csrf_token %}
+        <input type="text" name="search" placeholder="Cari Product, Owner">
+    </form>
+    <table>
+        <tr>
+            <th>Nama Product</th>
+            <th>Keterangan</th>
+            <th>Owner</th>
+            <th>Gambar</th>
+            <th colspan="2">Edit</th>
+        </tr>
+        {% for x in product %}
+        <tr>
+            <td>{{x.namaProduct}}</td>
+            <td>{{x.keterangan}}</td>
+            <td>{{x.owner}}</td>
+            <td> <img width="50px" src="{% static x.gambar %}" alt="ini gambar"></td>
+            <td><a href="{% url 'delete' x.id %}">Delete</a></td>
+            <td><a href="{% url 'update' x.id %}">Update</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+
+</html>

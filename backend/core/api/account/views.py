@@ -10,7 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 handler500 = "handler.views.handler500"
 
-@login_required(login_url='../../auth/login')
+#@login_required(login_url='../../auth/login')
 @api_view(['GET'])
 def listUser(request):
     print(User.objects.filter(username = request.user).first())
@@ -41,7 +41,7 @@ def createUser(request):
         
         
 
-@login_required(login_url='../../auth/login')
+#@login_required(login_url='../../auth/login')
 @api_view(['GET'])
 def getUser(request, username):
     if User.objects.get(username = username) is not None:
@@ -52,7 +52,7 @@ def getUser(request, username):
     else:
         raise ObjectDoesNotExist(f'{username} tidak tersedia')
 
-@login_required(login_url='../../auth/login')
+#@login_required(login_url='../../auth/login')
 @api_view(['GET','PUT'])
 def updateUser(request, username):
     print(User.objects.get(username = username) is None)
@@ -71,7 +71,7 @@ def updateUser(request, username):
         return redirect(f'/account/{username}/')
     return Response(serializer.data)
 
-@login_required(login_url='../../auth/login')
+#@login_required(login_url='../../auth/login')
 @api_view(['GET','DELETE'])
 def deleteUser(request, username):
     data = User.objects.filter(username = username)

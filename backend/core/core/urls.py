@@ -15,9 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/',include('api.authentication.urls')),
     path('account/',include('api.account.urls')),
+    path('accounts/google/login/',views.index),
+    path('accounts/', include('allauth.urls')),
+    path('seller/home/',include('seller.urls')),
+    path('product/',include('api.product.urls')),
 ]

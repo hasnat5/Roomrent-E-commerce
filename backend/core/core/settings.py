@@ -37,7 +37,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
+    'django.contrib.sites',
+    'seller',
+    'seller.models',
+    'rest_framework',    
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -48,7 +56,38 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
+
 ]
+
+CORS_ALLOW_ALL_ORIGINS: True
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+] 
+
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    'http://localhost:3000',
+]
+
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': '939531303994-k8mv59h159lpi72igte2lp51rj7h4p4k.apps.googleusercontent.com',
+            'secret': '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',
+            'key': ''
+        }
+    }
+}
+
+LOGIN_REDIRECT_URL = '/'
+
 
 ROOT_URLCONF = 'core.urls'
 
@@ -67,6 +106,7 @@ TEMPLATES = [
         },
     },
 ]
+SITE_ID = 1
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
@@ -117,6 +157,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / ''
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
