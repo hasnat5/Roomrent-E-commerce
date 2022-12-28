@@ -7,8 +7,6 @@ from rest_framework.validators import ValidationError
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 
-
-
 @api_view(['POST'])
 def loginView(request):
     nama = request.data['username']
@@ -19,6 +17,7 @@ def loginView(request):
         login(request, akun)
         print("Login Sukses")
         return redirect(f'/account/{akun.username}/')
+    return Response(akun)
 
 @login_required(login_url='/auth/login')
 def logoutview(request):

@@ -7,6 +7,8 @@ from ..authentication.serializers import userSerializer
 from django.shortcuts import redirect
 from django.conf.urls import handler500
 from django.core.exceptions import ObjectDoesNotExist
+from seller.models.Product import Product
+
 
 handler500 = "handler.views.handler500"
 
@@ -23,24 +25,31 @@ def listUser(request):
         serializer = userSerializer(data, many = True)
         return Response(serializer.data)
 
-
+#done
 @api_view(['POST'])
 def createUser(request):
     if request.method == "POST":
-        akun = User.objects.create_user(
-            email = request.data['email'],
-            username = request.data['username'],
-            password = request.data['password'],
-        )
-        if request.data['groups'] == "seller" or request.data['groups'] == 2:
-            akun.groups.add(2)
-        elif request.data['groups'] == "buyer" or request.data['groups'] == 3 or request.data['groups'] is None:
-            akun.groups.add(3)
+        if request.data['groups'] == "admin" or request.data['groups'] == 1:
+            raise ValidationError('Tidak boleh membuat admin')
+        elif request.data['groups'] == "seller" or request.data['groups'] == 2:
+            akun = User.objects.create_user(
+                email = request.data['email'],
+                username = request.data['username'],
+                password = request.data['password'],
+            ).groups.add(2)
+            return redirect(f'/account/{akun.username}/')
+        elif request.data['groups'] == "buyer" or request.data['groups'] == 3:
+            akun = User.objects.create_user(
+                email = request.data['email'],
+                username = request.data['username'],
+                password = request.data['password'],
+            ).groups.add(3)
+            return redirect(f'/account/{ request.data["username"] }')
         else:
-            raise ValidationError("Tidak boleh bikin admin")
+            raise ValidationError("Input tidak valid")
         
         
-
+#done
 #@login_required(login_url='../../auth/login')
 @api_view(['GET'])
 def getUser(request, username):
@@ -52,25 +61,40 @@ def getUser(request, username):
     else:
         raise ObjectDoesNotExist(f'{username} tidak tersedia')
 
+from rest_framework.generics import UpdateAPIView
+
 #@login_required(login_url='../../auth/login')
 @api_view(['GET','PUT'])
 def updateUser(request, username):
-    print(User.objects.get(username = username) is None)
     data = User.objects.filter(username = username)
+    product = Product.objects.filter(owner = username)
+    akun = User.objects.get(username = username)
+    print(type(data))
     serializer = userSerializer(data, many=True)
     if request.method == "PUT":
+        newuser = akun.username if None else request.data['username']
+        first_name = akun.first_name if None else request.data['first_name']
+        last_name = akun.last_name if None else request.data['last_name']
+        email = akun.email if None else request.data['email']
         data.update(
-            username = request.data['username'],
+            username = newuser,
+            # first_name = first_name,
+            # last_name = last_name,
+            # email = email,
+        )
+        product.update(
+            owner = newuser
         )
         serializer = userSerializer(data = data)
         if serializer.is_valid():
+            product.save()
             data.save()
             serializer.save()
-            username = request.data['username']
         username = request.data['username']
         return redirect(f'/account/{username}/')
     return Response(serializer.data)
 
+#done
 #@login_required(login_url='../../auth/login')
 @api_view(['GET','DELETE'])
 def deleteUser(request, username):

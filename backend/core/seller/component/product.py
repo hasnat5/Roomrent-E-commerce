@@ -5,14 +5,10 @@ from django.contrib.auth.models import User, Group
 import requests
 
 def listProduct(request):
-    product = Product.objects.all()
+    product = Product.objects.filter(owner = request.user)
     if request.method == "POST":
         kata_kunci = request.POST['search']
-        product = Product.objects.filter(
-            namaProduct__contains = kata_kunci
-            ) or Product.objects.filter(
-            owner__contains = kata_kunci
-            )
+        product = Product.objects.filter(namaProduct__contains = kata_kunci) or Product.objects.filter(owner__contains = kata_kunci)
     context = {
         "heading":"List",
         "product":product,
@@ -38,7 +34,6 @@ def addProduct(request):
         "formImage":formImage,
     }
     if request.method == "POST":
-        
         if form.is_valid() and formImage.is_valid():
             Product.objects.all().create(
                 namaProduct = request.POST['namaProduct'],
@@ -53,6 +48,7 @@ def addProduct(request):
 
 def updateProduct(request, update_id):
     akun = Product.objects.get(id = update_id)
+    product = Product.objects.filter(id = update_id)
     data = {
         "namaProduct":akun.namaProduct,
         "keterangan":akun.keterangan,
@@ -66,6 +62,9 @@ def updateProduct(request, update_id):
         "formImage":image
     }
     if request.method == "POST":
+        product.update(
+            owner = request.user
+        )
         if form.is_valid():
             image.save()
             form.save()

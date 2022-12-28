@@ -1,43 +1,4 @@
 {% load static %}
-<!-- <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-
-<body>
-    <h1>{{heading}}</h1>
-    <form action="" method="post">
-        {% csrf_token %}
-        <input type="text" name="search" placeholder="Cari Product, Owner">
-    </form>
-    <table>
-        <tr>
-            <th>Nama Product</th>
-            <th>Keterangan</th>
-            <th>Owner</th>
-            <th>Gambar</th>
-            <th colspan="2">Edit</th>
-        </tr>
-        {% for x in product %}
-        <tr>
-            <td>{{x.namaProduct}}</td>
-            <td>{{x.keterangan}}</td>
-            <td>{{x.owner}}</td>
-            <td> <img width="50px" src="{% static x.gambar %}" alt="ini gambar"></td>
-            <td><a href="{% url 'delete' x.id %}">Delete</a></td>
-            <td><a href="{% url 'update' x.id %}">Update</a></td>
-        </tr>
-        {% endfor %}
-    </table>
-</body>
-
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -53,12 +14,13 @@
 <body>
     <section style="background-color: #eee;">
         <br>
+        <h1 style="display: flex;justify-content: center;">Hello {{user}}</h1>
         <br>
     <form style="display: flex;justify-content: center;align-items: center;" action="" method="post">
         {% csrf_token %}
-        <input type="text" name="search">
+        <input type="text" name="search" placeholder="Search product, owner, address">
     </form>
-    {% for x in product %}
+    {% for x in object_list %}
         <div class="container py-5">
             <div class="row justify-content-center">
                 <div class="col-md-8 col-lg-6 col-xl-4">
@@ -101,7 +63,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center pb-2 mb-1">
                                 <a href="{% url 'delete' x.id %}" class="btn btn-outline-danger">Delete</a>
-                                <a href="{% url 'update' x.id %}">Update</a>
+                                <a href="{% url 'update' x.id %}" class="btn btn-primary">Pesan</a>
                             </div>
                         </div>
                     </div>

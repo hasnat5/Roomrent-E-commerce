@@ -38,7 +38,8 @@ def updateProduct(request, product_name):
     serializer = ProductSerializer(data, many = True)
     if request.method == "PUT":
         data.update(
-            namaProduct = request.data['namaProduct']
+            namaProduct = request.data['namaProduct'],
+            owner = request.user
         )
         serializer = ProductSerializer(data = data)
         if serializer.is_valid():
